@@ -11,18 +11,22 @@ struct Objet{
 
 typedef struct Objet item;
 
-int main () {
-	
-	item inventaire [5] = { {"Briquet", 10}, {"Chemise", 3}, {"Pentalon", 4}, {"bottes", 6}, {"Rapiere", 50} };
+void viewInventory (item * inventaire) {
 	printf ("INVENTAIRE : \n");
-	
 	for (int i = 0; i<5; i++) {
 		printf ("\n%s", inventaire[i].nom);
 		printf (" | PRIX : %d\n", inventaire[i].prix);
 		
-		
-
 	}
+};
+
+int main () {
+	
+	item inventaire [5] = { {"Briquet", 10}, {"Chemise", 3}, {"Pentalon", 4}, {"bottes", 6}, {"Rapiere", 50} };
+	
+	
+	viewInventory (&inventaireJoueur);
+	
 	
 	
 
