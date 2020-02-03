@@ -18,8 +18,8 @@ void viewInventory (item * inventaire) {
 	
 	for (int i = 0; i<50; i++) {
 		if (strcmp(inventaire[i].nom , "") > 0){
-			printf ("\n%s", inventaire[i].nom);
-			printf (" | PRIX : %d\n", inventaire[i].prix);
+			int nbSlot = i+1;
+			printf ("\nCase %d : %s",nbSlot, inventaire[i].nom);
 			
 		}
 		
@@ -54,14 +54,11 @@ void sortInventory(item * inventaire){
 };
 
 void viewMerchantStore (item * inventaire) {
-
-	printf ("\n*************************************************************************************************************\n");
-	
-	printf ("___________________\n");
 	
 	for (int i = 0; i<50; i++) {
 		if (strcmp(inventaire[i].nom , "") > 0){
-			printf ("\n%s", inventaire[i].nom);
+			int nbSlot = i + 1;
+			printf ("\nCase %d : %s", nbSlot, inventaire[i].nom);
 			printf (" | PRIX : %d\n", inventaire[i].prix);
 			
 		}
@@ -77,22 +74,61 @@ void sortStore(item * inventaire){
 
     for(int i=0; i<49; i++){
         for(int j=(i+1); j<50; j++){
-            if(inventaire[i].prix > inventaire[j].prix){
-                
-				strcpy(tamponNom, inventaire[i].nom);
-                strcpy(inventaire[i].nom, inventaire[j].nom);
-                strcpy(inventaire[j].nom, tamponNom);
-				
-				tamponPrix = inventaire[i].prix;
-                inventaire[i].prix = inventaire[j].prix;
-                inventaire[j].prix = tamponPrix;
-            }
+			if (strcmp(inventaire[j].nom , "") > 0){
+				if(inventaire[i].prix > inventaire[j].prix){
+					
+					strcpy(tamponNom, inventaire[i].nom);
+					strcpy(inventaire[i].nom, inventaire[j].nom);
+					strcpy(inventaire[j].nom, tamponNom);
+					
+					tamponPrix = inventaire[i].prix;
+					inventaire[i].prix = inventaire[j].prix;
+					inventaire[j].prix = tamponPrix;
+				}
+			}
         }
 
     }
+	
+	
 
 };
 
+void addMerchantItem (item * inventaire) {
+	char nom [30];
+	int prix;
+	printf (" Objet : ");
+	scanf ("%s", &nom);
+	printf (" Prix : ");
+	scanf ("%d", &prix);
+	
+	
+	for(int i=0; i<50; i++){
+        if(strcmp (inventaire[i].nom , "") == 0 ){
+			strcpy (inventaire[i].nom , nom);
+			inventaire[i].prix = prix;
+			i=50;
+        }
+	}
+};
+
+void buyItem (item * inventaire, item * objet) {
+	int nSlot;
+	printf(" Choisissez un objet dans mon echope en tappant son numero !\n");
+	scanf ("%d", &nSlot);
+	nSlot -= 1;
+	
+	for(int i=0; i<50; i++){
+        if(strcmp (inventaire[i].nom , "") == 0 ){
+			strcpy (inventaire[i].nom ,objet[nSlot].nom);
+			inventaire[i].prix = objet[nSlot].prix;
+			strcpy(objet[nSlot].nom, "");
+			objet[nSlot].prix=0;
+			i=50;
+        }
+	}
+	
+};
 
 //Début
 int main () {
@@ -115,8 +151,23 @@ int main () {
 	printf ("\nMAGASIN DU MARCHAND : \n");
 	printf ("___________________\n");
 	sortStore (&MerchantStore[0]);
-	viewInventory (&MerchantStore[0]);
+	viewMerchantStore(&MerchantStore[0]);
+	printf ("\n*************************************************************************************************************\n");
+		
+	//Commande
+	printf ("\n Quel objet souhaitez vous commander ?\n");
+	addMerchantItem (&MerchantStore[0]);
+	sortStore (&MerchantStore[0]);
+	viewMerchantStore (&MerchantStore[0]);
 	printf ("\n*************************************************************************************************************\n");
 	
+	//Achat
+	printf ("\n Que voulez vous acheter ?\n");
+	buyItem (&inventaireJoueur[0], &MerchantStore[0] );
+	sortInventory (&inventaireJoueur[0]);
+	viewInventory (&inventaireJoueur[0]);
+	sortStore (&MerchantStore[0]);
+	
+	printf ("\n*************************************************************************************************************\n");
 	return 0;
 }
